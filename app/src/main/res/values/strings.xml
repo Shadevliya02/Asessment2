@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">Asessment2</string>
+    <string name="app_name">Kontak</string>
+    <string name="list_kosong">Belum ada kontak</string>
+    <string name="x_diklik">%1$s diklik!</string>
+    <string name="tambah_catatan">Tambah Kontak</string>
+    <string name="judul">Nama</string>
+    <string name="isi_catatan">Nomor Telepon</string>
+    <string name="kembali">Kembali</string>
+    <string name="simpan">Simpan</string>
+    <string name="edit_catatan">Ubah Kontak</string>
+    <string name="invalid">Nama dan Nomor Telepon tidak boleh kosong.</string>
+    <string name="lainnya">Opsi Lainnya</string>
+    <string name="hapus">Hapus Kontak</string>
+    <string name="pesan_hapus">Hapus kontak ini?</string>
+    <string name="tombol_hapus">Hapus</string>
+    <string name="tombol_batal">Batal</string>
+    <string name="list">Tampilan List</string>
+    <string name="grid">Tampilan Grid</string>
+    <string name="konfirmasi_hapus">Konfirmasi Hapus</string>
 </resources>
