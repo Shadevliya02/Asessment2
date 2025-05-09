@@ -16,9 +16,9 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -71,11 +71,22 @@ fun MainScreen(navController: NavHostController) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 actions = {
-                    IconButton(onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            dataStore.saveLayout(!showList)
+                    IconButton(
+                        onClick = { navController.navigate(Screen.RecycleBin.route) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = stringResource(R.string.recycle_bin),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveLayout(!showList)
+                            }
                         }
-                    }) {
+                    ) {
                         Icon(
                             painter = painterResource(
                                 if (showList) R.drawable.baseline_grid_view_24
@@ -85,7 +96,7 @@ fun MainScreen(navController: NavHostController) {
                                 if (showList) R.string.grid
                                 else R.string.list
                             ),
-                            tint =  MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -109,7 +120,6 @@ fun MainScreen(navController: NavHostController) {
     }
 }
 
-
 @Composable
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
@@ -127,19 +137,19 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
             Text(text = stringResource(id = R.string.list_kosong))
         }
     } else {
-        if (showList)
+        if (showList) {
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
-                items(data) {
-                    ListItem(kontak = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
+                items(data) { kontak ->
+                    ListItem(kontak = kontak) {
+                        navController.navigate(Screen.FormUbah.withId(kontak.id))
                     }
                     HorizontalDivider()
                 }
             }
-        else{
+        } else {
             LazyVerticalStaggeredGrid(
                 modifier = modifier.fillMaxSize(),
                 columns = StaggeredGridCells.Fixed(2),
@@ -147,9 +157,9 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
-                items(data) {
-                    GridItem(kontak = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
+                items(data) { kontak ->
+                    GridItem(kontak = kontak) {
+                        navController.navigate(Screen.FormUbah.withId(kontak.id))
                     }
                 }
             }
@@ -160,7 +170,8 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
 @Composable
 fun ListItem(kontak: Kontak, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .clickable { onClick() }
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -169,17 +180,20 @@ fun ListItem(kontak: Kontak, onClick: () -> Unit) {
             text = kontak.nama,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium
         )
         Text(
             text = kontak.nomorTelepon,
             maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = kontak.gender,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
@@ -187,28 +201,35 @@ fun ListItem(kontak: Kontak, onClick: () -> Unit) {
 @Composable
 fun GridItem(kontak: Kontak, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
-        border = BorderStroke(1.dp, DividerDefaults.color)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = kontak.nama,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall
             )
             Text(
                 text = kontak.nomorTelepon,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall
             )
-            Text(text = kontak.gender)
+            Text(
+                text = kontak.gender,
+                style = MaterialTheme.typography.labelSmall
+            )
         }
     }
 }
@@ -217,7 +238,7 @@ fun GridItem(kontak: Kontak, onClick: () -> Unit) {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    Asessment2Theme{
-        rememberNavController()
+    Asessment2Theme {
+        MainScreen(rememberNavController())
     }
 }

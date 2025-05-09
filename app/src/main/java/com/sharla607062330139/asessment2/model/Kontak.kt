@@ -9,6 +9,6 @@ data class Kontak(
     val id: Long = 0L,
     val nama: String,
     val nomorTelepon: String,
-    val gender: String
+    val gender: String,
+    val isDeleted: Boolean = false
 )
-

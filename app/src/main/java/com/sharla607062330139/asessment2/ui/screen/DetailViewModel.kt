@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val dao: KontakDao) : ViewModel() {
-
     private val _kontak = mutableStateOf<Kontak?>(null)
     val kontak = _kontak
 
@@ -24,7 +23,8 @@ class DetailViewModel(private val dao: KontakDao) : ViewModel() {
         val kontak = Kontak(
             nama = nama,
             nomorTelepon = nomorTelepon,
-            gender = gender
+            gender = gender,
+            isDeleted = false
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -37,7 +37,8 @@ class DetailViewModel(private val dao: KontakDao) : ViewModel() {
             id = id,
             nama = nama,
             nomorTelepon = nomorTelepon,
-            gender = gender
+            gender = gender,
+            isDeleted = _kontak.value?.isDeleted ?: false
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -45,9 +46,9 @@ class DetailViewModel(private val dao: KontakDao) : ViewModel() {
         }
     }
 
-    fun delete(id: Long) {
+    fun softDelete(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteById(id)
+            dao.softDeleteById(id)
         }
     }
 }
